@@ -44,3 +44,11 @@ func (p ProductUseCase) UpdateProduct(product model.Product) (model.Product, err
 	}
 	return product, nil
 }
+
+func (p ProductUseCase) DeleteProduct(product_id int) error {
+	err := p.repository.DeleteProduct(product_id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
