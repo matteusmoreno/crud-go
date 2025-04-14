@@ -76,3 +76,19 @@ func (p *ProductRepository) GetProductById(product_id int) (*model.Product, erro
 	query.Close()
 	return &product, nil
 }
+
+func (p *ProductRepository) UpdateProduct(product model.Product) error {
+	query, err := p.connection.Prepare("UPDATE products SET product_name = $1, price = $2 WHERE id = $3")
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	_, err = query.Exec(product.Name, product.Price, product.ID)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	query.Close()
+	return nil
+}

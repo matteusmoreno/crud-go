@@ -35,5 +35,12 @@ func (p ProductUseCase) GetProductById(product_id int) (*model.Product, error) {
 		return nil, err
 	}
 	return product, nil
+}
 
+func (p ProductUseCase) UpdateProduct(product model.Product) (model.Product, error) {
+	err := p.repository.UpdateProduct(product)
+	if err != nil {
+		return model.Product{}, err
+	}
+	return product, nil
 }

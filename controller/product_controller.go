@@ -78,5 +78,40 @@ func (p *productController) GetProductById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, product)
+}
 
+func (p *productController) UpdateProduct(c *gin.Context) {
+	productId := c.Param("id")
+	if productId == "" {
+		response := model.Response{
+			Message: "Product ID is required",
+		}
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	productIdInt, err := strconv.Atoi(productId)
+	if err != nil {
+		response := model.Response{
+			Message: "Invalid Product ID",
+		}
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	var product model.Product
+	if err := c.ShouldBindJSON(&product); err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	product.ID = productIdInt
+
+	product, err = p.productUseCase.UpdateProduct(product)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, product)
 }
